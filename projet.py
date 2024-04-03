@@ -6,25 +6,6 @@ import numpy as np
 from function import *
 
 
-
-cur.execute("SELECT value FROM `oc_setting` WHERE `key` LIKE 'payment_%_status' AND `value` LIKE '0' ")
-if len(cur.fetchall()) != 0:
-    state = 'unBlock'
-else:
-    state = 'Block'
-
-def toBlockTransaction():
-    global state
-    cur.execute("SELECT value FROM `oc_setting` WHERE `key` LIKE 'payment_%_status' AND `value` LIKE '0' ")
-    resultats = cur.fetchall()
-    if len(resultats) != 0:
-        cur.execute("UPDATE oc_setting SET value = '1' WHERE `key` LIKE 'payment_%_status' AND value = '0'")
-        state = 'Block'
-    else:
-        cur.execute("UPDATE oc_setting SET value = '0' WHERE `key` LIKE 'payment_%_status' AND value = '1'")
-        state = 'unBlock'
-    conn.commit()
-
 previousState = state
 previousNumberOfConversion = numberOfConversion()
 previousActiveShoppingSession = activeShoppingSession()
