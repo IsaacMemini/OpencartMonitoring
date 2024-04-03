@@ -142,7 +142,17 @@ class DashboardOpencart:
         self.signatureText2.place(x=15,y=460)
         self.signatureText3 = Label(self.FrameMenu,text="Mamadou Abdoul Hamid DIALLO",font=("sans serif",11,"bold"),fg="#000000",bg="#ffffff")
         self.signatureText3.place(x=15,y=490)
-         
+          ##bouton de sortie
+        self.logOut = Button(self.FrameMenu,bd=0,text="Quit",bg="#ffffff",font=("sans serif",13,"bold"),command=self.root.quit) 
+        self.logOut.place(x=25,y=650,width=265)
+        self.sortieImage = Image.open(r"arrow.png")
+        photo = ImageTk.PhotoImage(self.sortieImage)
+        self.logo = Label(self.FrameMenu,image = photo,bg="#ffffff")
+        self.logo.image3 = photo
+        self.logo.place(x=20,y=650)
+        
+        self.corp1 = Frame(self.root, bg="#ffffff")
+        self.corp1.place(x=315, y=357, width=930, height=300)
 if __name__ == "__main__":
     root = Tk()
     DashboardOpencart(root)
