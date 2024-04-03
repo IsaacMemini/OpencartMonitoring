@@ -26,3 +26,7 @@ def totalSales():
     cur.execute("SELECT sum(value) AS TotalSales FROM oc_order_total where code = 'total'")
     return int(cur.fetchone()[0])
 
+def customerRetentionRate():
+    conn.commit()
+    cur.execute("SELECT (COUNT(DISTINCT order_id_recurrent) / COUNT(DISTINCT order_id)) * 100 AS taux_retour_client FROM    (SELECT   o1.customer_id,            o1.order_id AS order_id_recurrent,MIN(o2.order_id) AS order_id FROM oc_order o1 LEFT JOIN oc_order o2 ON o1.customer_id = o2.customer_id AND o1.order_id < o2.order_id    GROUP BY o1.order_id) AS recurrent_orders")
+    return int(cur.fetchone()[0])
