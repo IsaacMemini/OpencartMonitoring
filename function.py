@@ -16,3 +16,8 @@ def peopleOnline():
     cur.execute("SELECT COUNT(*) AS connected_customers FROM oc_session WHERE expire > NOW()")
     return cur.fetchone()
 
+def totalCustomers():
+    conn.commit()
+    cur.execute("SELECT COUNT(*) AS TotalCustomers FROM oc_customer")
+    return cur.fetchone()
+
