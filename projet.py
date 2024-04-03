@@ -6,6 +6,7 @@ import numpy as np
 from function import *
 
 
+
 cur.execute("SELECT value FROM `oc_setting` WHERE `key` LIKE 'payment_%_status' AND `value` LIKE '0' ")
 if len(cur.fetchall()) != 0:
     state = 'unBlock'
@@ -23,7 +24,7 @@ def toBlockTransaction():
         cur.execute("UPDATE oc_setting SET value = '0' WHERE `key` LIKE 'payment_%_status' AND value = '1'")
         state = 'unBlock'
     conn.commit()
-    
+
 previousState = state
 previousNumberOfConversion = numberOfConversion()
 previousActiveShoppingSession = activeShoppingSession()
@@ -66,7 +67,7 @@ class DashboardOpencart:
         self.logo.place(y=100)
         self.Nom =Label(self.FrameMenu,text="Admin",bg="#ffffff",font=("sans serif",13,"bold"))
         self.Nom.place(x=90,y=350)
-       ##corps
+        ##corps
         self.titre = Label(self.entete,text = "Monitoring Page",font=("sans serif",23,"bold"),fg="#ffffff",bg="#1e91cf")
         self.titre.place(x=10,y=10)
         self.corp2 = Frame(self.root, bg="#1b80c2")
@@ -141,7 +142,7 @@ class DashboardOpencart:
         self.signatureText2.place(x=15,y=460)
         self.signatureText3 = Label(self.FrameMenu,text="Mamadou Abdoul Hamid DIALLO",font=("sans serif",11,"bold"),fg="#000000",bg="#ffffff")
         self.signatureText3.place(x=15,y=490)
-          ##bouton de sortie
+        ##bouton de sortie
         self.logOut = Button(self.FrameMenu,bd=0,text="Quit",bg="#ffffff",font=("sans serif",13,"bold"),command=self.root.quit) 
         self.logOut.place(x=25,y=650,width=265)
         self.sortieImage = Image.open(r"arrow.png")
@@ -152,6 +153,65 @@ class DashboardOpencart:
         
         self.corp1 = Frame(self.root, bg="#ffffff")
         self.corp1.place(x=315, y=357, width=930, height=300)
+
+        # Générer des données de chiffre d'affaires pour chaque mois
+        # Imaginons que chaque mois a un 'chiffre d'affaires' distinct que nous voulons afficher
+        chiffre_affaires = np.random.randint(100, 1000, size=12) * 1e6  # Chiffre en millions
+
+        # Créer l'histogramme
+        self.figure = Figure(figsize=(10, 6), dpi=100)
+        self.plot = self.figure.add_subplot(1, 1, 1)
+        
+        # Simulation d'un histogramme avec les données de chiffre d'affaires pour chaque mois
+        mois = np.arange(1, 13)  # De 1 (Janvier) à 12 (Décembre)
+        self.plot.hist(mois, bins=12, weights=chiffre_affaires, rwidth=1.0,edgecolor='black',linewidth=0.8)
+        
+        self.plot.set_title('revenue')
+        self.plot.set_xticks(mois)
+        self.plot.set_xticklabels(['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'])
+        self.plot.set_ylabel('revenue')
+        self.plot.set_ylim(0, 1e9)  # Limite pour correspondre à 1 milliard
+
+        # Ajout de l'histogramme à Tkinter
+        self.canvas = FigureCanvasTkAgg(self.figure, self.corp1)
+        self.canvas.draw()
+        self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=True)
+        self.refreshApp()
+        
+    def refreshApp(self):
+        global previousState,previousNumberOfConversion,previousActiveShoppingSession,previousPeopleOnline,previousTotalCustomer,previousAbandonnedCard,previousRevenue,previousTotalSales,previousCustomerRetentionRate
+        if state != previousState:
+            self.deconnecte.config(text=state)
+            previousState = state
+        if numberOfConversion()  != previousNumberOfConversion:
+            self.corp2Label.config(text=numberOfConversion())
+            previousNumberOfConversion = numberOfConversion()
+            
+        if activeShoppingSession() != previousActiveShoppingSession:
+            self.corp3Label.config(text = activeShoppingSession())
+            previousActiveShoppingSession = activeShoppingSession()
+            
+        if totalCustomers() != previousTotalCustomer:
+            self.corp4Label.config(text=totalCustomers())
+            previousTotalCustomer = totalCustomers()
+            
+        if peopleOnline()  != previousPeopleOnline:
+            self.corp5Label.config(text=peopleOnline()) 
+            previousPeopleOnline = peopleOnline()
+        if abandonedCart() != previousAbandonnedCard:
+                self.corp9Label.config(text=abandonedCart())
+                previousAbandonnedCard = abandonedCart()
+        if revenue() != previousRevenue:
+                self.corp8Label.config(text=revenue())
+                previousRevenue = revenue()
+        if totalSales() != previousTotalSales:
+            self.corp7Label.config(text=totalSales())
+            previousTotalSales = totalSales()
+        if customerRetentionRate() != previousCustomerRetentionRate:
+            self.corp6Label.config(text=customerRetentionRate())
+            previousCustomerRetentionRate = customerRetentionRate()
+        self.root.after(150,self.refreshApp) 
+         
 if __name__ == "__main__":
     root = Tk()
     DashboardOpencart(root)
